@@ -6,9 +6,15 @@
 #include "GetChar.h"
 ////////////////////
 
+#include <iostream>
+
 #if _WIN32
 
+#include "Console.h"
+
 #include <conio.h>
+
+#include <stdio.h>
 
 char getCharNoBuffer()
 {
@@ -16,7 +22,7 @@ char getCharNoBuffer()
 
     if (c == EOF)
     {
-        exitOrWaitForInput(0);
+        Console::exitOrWaitForInput(0);
     }
 
     return c;
@@ -24,7 +30,7 @@ char getCharNoBuffer()
 
 #else
 
-#include <iostream>
+
 #include <termios.h>
 
 static termios oldTerm;
