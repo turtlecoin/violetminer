@@ -4,12 +4,12 @@
 
 #pragma once
 
+#include "PoolCommunication/PoolCommunication.h"
+#include "Types/JobSubmit.h"
+
 #include <chrono>
 #include <memory>
 #include <vector>
-
-#include "Types/JobSubmit.h"
-#include "PoolCommunication/PoolCommunication.h"
 
 class HashManager
 {
@@ -30,7 +30,7 @@ class HashManager
 
     /* Start hashrate monitoring */
     void start();
-    
+
   private:
     /* Total number of hashes we have performed */
     std::atomic<uint64_t> m_totalHashes = 0;

@@ -24,4 +24,4 @@ namespace Utilities
             sleptFor += sleepDuration;
         }
     }
-}
+} // namespace Utilities

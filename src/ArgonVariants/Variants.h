@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include <functional>
-#include <memory>
-
 #include "ArgonVariants/Argon2Hash.h"
 #include "Types/IHashingAlgorithm.h"
 #include "Utilities/String.h"
+
+#include <functional>
+#include <memory>
 
 namespace ArgonVariant
 {
@@ -25,21 +25,20 @@ namespace ArgonVariant
 
        The third parameter determines if we should display the algorithm
        name when listing available algorithms. */
-    inline std::vector<std::tuple<std::string, Algorithm, bool>> algorithmNameMapping
-    {
+    inline std::vector<std::tuple<std::string, Algorithm, bool>> algorithmNameMapping {
         /* CHUKWA */
-        { "chukwa",         Chukwa, true  },
-        { "turtlecoin",     Chukwa, true  },
-        { "trtl",           Chukwa, false },
-        { "argon2",         Chukwa, false },
-        { "argon2/chukwa",  Chukwa, false },
+        {"chukwa", Chukwa, true},
+        {"turtlecoin", Chukwa, true},
+        {"trtl", Chukwa, false},
+        {"argon2", Chukwa, false},
+        {"argon2/chukwa", Chukwa, false},
 
         /* CHUKWA WRKZ */
-        { "chukwa_wrkz",    ChukwaWrkz, true  },
-        { "wrkzcoin",       ChukwaWrkz, true  },
-        { "wrkz",           ChukwaWrkz, false },
-        { "argon2/wrkz",    ChukwaWrkz, false },
-        { "chukwa/wrkz",    ChukwaWrkz, false },
+        {"chukwa_wrkz", ChukwaWrkz, true},
+        {"wrkzcoin", ChukwaWrkz, true},
+        {"wrkz", ChukwaWrkz, false},
+        {"argon2/wrkz", ChukwaWrkz, false},
+        {"chukwa/wrkz", ChukwaWrkz, false},
     };
 
     inline Algorithm algorithmNameToCanonical(const std::string &algorithmNameDirty)
@@ -50,11 +49,10 @@ namespace ArgonVariant
 
         Utilities::trim(algorithmName);
 
-        const auto it = std::find_if(algorithmNameMapping.begin(), algorithmNameMapping.end(),
-        [&algorithmName](const auto algo)
-        {
-            return std::get<0>(algo) == algorithmName;
-        });
+        const auto it =
+            std::find_if(algorithmNameMapping.begin(), algorithmNameMapping.end(), [&algorithmName](const auto algo) {
+                return std::get<0>(algo) == algorithmName;
+            });
 
         if (it == algorithmNameMapping.end())
         {
@@ -66,27 +64,15 @@ namespace ArgonVariant
 
     inline std::shared_ptr<IHashingAlgorithm> getCPUMiningAlgorithm(std::string algorithm)
     {
-        switch(algorithmNameToCanonical(algorithm))
+        switch (algorithmNameToCanonical(algorithm))
         {
             case Chukwa:
             {
-                return std::make_shared<Argon2Hash>(
-                    512,
-                    3,
-                    1,
-                    16,
-                    Constants::ARGON2ID
-                );
+                return std::make_shared<Argon2Hash>(512, 3, 1, 16, Constants::ARGON2ID);
             }
             case ChukwaWrkz:
             {
-                return std::make_shared<Argon2Hash>(
-                    256,
-                    4,
-                    1,
-                    16,
-                    Constants::ARGON2ID
-                );
+                return std::make_shared<Argon2Hash>(256, 4, 1, 16, Constants::ARGON2ID);
             }
             default:
             {
@@ -94,4 +80,4 @@ namespace ArgonVariant
             }
         }
     }
-}
+} // namespace ArgonVariant

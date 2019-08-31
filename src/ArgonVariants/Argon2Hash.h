@@ -24,7 +24,6 @@ class Argon2Hash : virtual public IHashingAlgorithm
     virtual std::vector<uint8_t> hash(std::vector<uint8_t> &input);
 
   private:
-
     Argon2 m_argonInstance;
 
     const uint32_t m_saltLength;

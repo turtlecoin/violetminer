@@ -111,7 +111,7 @@ namespace Utilities
         std::string result;
         result.resize(sizeof(input) * 2);
 
-        toHex(reinterpret_cast<const unsigned char*>(&input), result.data(), sizeof(input));
+        toHex(reinterpret_cast<const unsigned char *>(&input), result.data(), sizeof(input));
 
         return result;
     }
@@ -134,8 +134,7 @@ namespace Utilities
 
         for (int i = 0; i < outputLength; i++)
         {
-            output[i] = char2int(input[i * 2]) * 16 
-                      + char2int(input[(i * 2) + 1]);
+            output[i] = char2int(input[i * 2]) * 16 + char2int(input[(i * 2) + 1]);
         }
 
         return output;
@@ -145,8 +144,7 @@ namespace Utilities
     {
         for (int i = 0; i < inputLength / 2; i++)
         {
-            output[i] = char2int(input[i * 2]) * 16
-                      + char2int(input[(i * 2) + 1]);
+            output[i] = char2int(input[i * 2]) * 16 + char2int(input[(i * 2) + 1]);
         }
     }
 

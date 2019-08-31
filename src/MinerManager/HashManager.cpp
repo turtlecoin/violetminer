@@ -6,20 +6,14 @@
 #include "MinerManager/HashManager.h"
 ////////////////////////////////////
 
+#include "Utilities/ColouredMsg.h"
+
 #include <iostream>
 #include <sstream>
 
-#include "Utilities/ColouredMsg.h"
+HashManager::HashManager(const std::shared_ptr<PoolCommunication> pool): m_pool(pool) {}
 
-HashManager::HashManager(
-    const std::shared_ptr<PoolCommunication> pool):
-    m_pool(pool)
-{
-}
-
-bool isHashValidForTarget(
-    const std::vector<uint8_t> &hash,
-    const uint64_t target)
+bool isHashValidForTarget(const std::vector<uint8_t> &hash, const uint64_t target)
 {
     return *reinterpret_cast<const uint64_t *>(hash.data() + 24) < target;
 }
@@ -106,8 +100,7 @@ void HashManager::printStats()
 
     m_pool->printPool();
 
-    std::cout << WhiteMsg("Accepted shares percentage: ")
-              << std::fixed << std::setprecision(2)
+    std::cout << WhiteMsg("Accepted shares percentage: ") << std::fixed << std::setprecision(2)
               << WhiteMsg(submitPercentage) << WhiteMsg("%") << std::endl;
 }
 

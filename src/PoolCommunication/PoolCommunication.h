@@ -4,11 +4,11 @@
 
 #pragma once
 
-#include <vector>
-
 #include "SocketWrapper/SocketWrapper.h"
 #include "Types/Pool.h"
 #include "Types/PoolMessage.h"
+
+#include <vector>
 
 class PoolCommunication
 {
@@ -27,10 +27,7 @@ class PoolCommunication
     Job getJob();
 
     /* Submit a *valid* share to the pool. */
-    void submitShare(
-        const std::vector<uint8_t> &hash,
-        const std::string jobID,
-        const uint32_t nonce);
+    void submitShare(const std::vector<uint8_t> &hash, const std::string jobID, const uint32_t nonce);
 
     /* Triggers us to start listening for messages and handling them */
     void startManaging();
@@ -41,7 +38,7 @@ class PoolCommunication
     /* Register a function to call when a share is accepted */
     void onHashAccepted(const std::function<void(const std::string &shareID)>);
 
-    /* Register a function to call when the current pool is disconnected and 
+    /* Register a function to call when the current pool is disconnected and
        a new pool is connected */
     void onPoolSwapped(const std::function<void(const Pool &pool)>);
 

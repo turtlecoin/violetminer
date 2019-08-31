@@ -5,8 +5,8 @@
 #pragma once
 
 #include "Miner/GetConfig.h"
-#include "Types/PoolMessage.h"
 #include "Types/PerformanceStats.h"
+#include "Types/PoolMessage.h"
 
 class IBackend
 {

@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <functional>
-#include <string>
-
 #include "ArgonVariants/Variants.h"
 #include "Config/Constants.h"
 #include "ExternalLibs/json.hpp"
 #include "Types/IHashingAlgorithm.h"
+
+#include <functional>
+#include <string>
 
 struct Pool
 {
@@ -56,17 +56,15 @@ struct Pool
 
 inline void to_json(nlohmann::json &j, const Pool &pool)
 {
-    j = {
-        {"host", pool.host},
-        {"port", pool.port},
-        {"username", pool.username},
-        {"password", pool.password},
-        {"rigID", pool.rigID},
-        {"algorithm", pool.algorithm},
-        {"agent", pool.agent},
-        {"niceHash", pool.niceHash},
-        {"priority", pool.priority}
-    };
+    j = {{"host", pool.host},
+         {"port", pool.port},
+         {"username", pool.username},
+         {"password", pool.password},
+         {"rigID", pool.rigID},
+         {"algorithm", pool.algorithm},
+         {"agent", pool.agent},
+         {"niceHash", pool.niceHash},
+         {"priority", pool.priority}};
 }
 
 inline void from_json(const nlohmann::json &j, Pool &pool)

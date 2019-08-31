@@ -2,17 +2,17 @@
 //
 // Please see the included LICENSE file for more information.
 
-#include <iostream>
-
 #include "ArgonVariants/Variants.h"
 #include "Config/Config.h"
 #include "Config/Constants.h"
-#include "MinerManager/MinerManager.h"
 #include "Miner/GetConfig.h"
+#include "MinerManager/MinerManager.h"
 #include "PoolCommunication/PoolCommunication.h"
 #include "Types/Pool.h"
 #include "Utilities/ColouredMsg.h"
 #include "Utilities/GetChar.h"
+
+#include <iostream>
 
 #if defined(X86_OPTIMIZATIONS)
 #include "cpu_features/include/cpuinfo_x86.h"
@@ -40,8 +40,10 @@ std::vector<Pool> getDevPools()
 
 void printWelcomeHeader(MinerConfig config)
 {
-    std::cout << InformationMsg("* ") << WhiteMsg("ABOUT", 25) << InformationMsg("violetminer " + Constants::VERSION) << std::endl
-              << InformationMsg("* ") << WhiteMsg("THREADS", 25) << InformationMsg(config.hardwareConfiguration.cpu.threadCount) << std::endl
+    std::cout << InformationMsg("* ") << WhiteMsg("ABOUT", 25) << InformationMsg("violetminer " + Constants::VERSION)
+              << std::endl
+              << InformationMsg("* ") << WhiteMsg("THREADS", 25)
+              << InformationMsg(config.hardwareConfiguration.cpu.threadCount) << std::endl
               << InformationMsg("* ") << WhiteMsg("OPTIMIZATION SUPPORT", 25);
 
     std::vector<std::tuple<Constants::OptimizationMethod, bool>> availableOptimizations;
@@ -50,18 +52,16 @@ void printWelcomeHeader(MinerConfig config)
 
     static const cpu_features::X86Features features = cpu_features::GetX86Info().features;
 
-    availableOptimizations = {
-        { Constants::AVX512, features.avx512f },
-        { Constants::AVX2, features.avx2 },
-        { Constants::SSE41, features.sse4_1 },
-        { Constants::SSSE3, features.ssse3 },
-        { Constants::SSE2, features.sse2 }
-    };
+    availableOptimizations = {{Constants::AVX512, features.avx512f},
+                              {Constants::AVX2, features.avx2},
+                              {Constants::SSE41, features.sse4_1},
+                              {Constants::SSSE3, features.ssse3},
+                              {Constants::SSE2, features.sse2}};
 
 #elif defined(ARMV8_OPTIMIZATIONS)
-    availableOptimizations = { { Constants::NEON, true} }; /* All ARMv8 cpus have NEON optimizations */
+    availableOptimizations = {{Constants::NEON, true}}; /* All ARMv8 cpus have NEON optimizations */
 #else
-    availableOptimizations = {{ Constants::NONE, false } };
+    availableOptimizations = {{Constants::NONE, false}};
 #endif
 
     for (const auto &[optimization, enabled] : availableOptimizations)
@@ -77,10 +77,11 @@ void printWelcomeHeader(MinerConfig config)
     }
 
     std::cout << std::endl << InformationMsg("* ") << WhiteMsg("CHOSEN OPTIMIZATION", 25);
-    
+
     if (config.hardwareConfiguration.cpu.optimizationMethod == Constants::AUTO)
     {
-        std::cout << SuccessMsg(Constants::optimizationMethodToString(config.hardwareConfiguration.cpu.optimizationMethod));
+        std::cout << SuccessMsg(
+            Constants::optimizationMethodToString(config.hardwareConfiguration.cpu.optimizationMethod));
 
         const auto optimization = getAutoChosenOptimization();
 
@@ -95,20 +96,24 @@ void printWelcomeHeader(MinerConfig config)
     }
     else if (config.hardwareConfiguration.cpu.optimizationMethod != Constants::NONE)
     {
-        std::cout << SuccessMsg(Constants::optimizationMethodToString(config.hardwareConfiguration.cpu.optimizationMethod)) << std::endl;
+        std::cout << SuccessMsg(
+                         Constants::optimizationMethodToString(config.hardwareConfiguration.cpu.optimizationMethod))
+                  << std::endl;
     }
     else
     {
-        std::cout << WarningMsg(Constants::optimizationMethodToString(config.hardwareConfiguration.cpu.optimizationMethod)) << std::endl;
+        std::cout << WarningMsg(
+                         Constants::optimizationMethodToString(config.hardwareConfiguration.cpu.optimizationMethod))
+                  << std::endl;
     }
 
 #if defined(NVIDIA_ENABLED)
     printNvidiaHeader();
 #endif
 
-    std::cout << InformationMsg("* ") << WhiteMsg("COMMANDS", 25)
-              << InformationMsg("h") << SuccessMsg("ashrate")
-              << std::endl << std::endl;
+    std::cout << InformationMsg("* ") << WhiteMsg("COMMANDS", 25) << InformationMsg("h") << SuccessMsg("ashrate")
+              << std::endl
+              << std::endl;
 }
 
 void interact(MinerManager &userMinerManager, MinerManager &devMinerManager)
@@ -119,7 +124,7 @@ void interact(MinerManager &userMinerManager, MinerManager &devMinerManager)
     {
         const char c = getCharNoBuffer();
 
-        switch(c)
+        switch (c)
         {
             case 'h':
             {
@@ -128,8 +133,7 @@ void interact(MinerManager &userMinerManager, MinerManager &devMinerManager)
             }
             default:
             {
-                std::cout << WhiteMsg("Available commands: ")
-                          << SuccessMsg("h") << WhiteMsg("ashrate") << std::endl;
+                std::cout << WhiteMsg("Available commands: ") << SuccessMsg("h") << WhiteMsg("ashrate") << std::endl;
             }
         }
     }
@@ -171,7 +175,10 @@ int main(int argc, char **argv)
 
     if (Constants::DEV_FEE_PERCENT == 0)
     {
-        std::cout << WarningMsg("Dev fee disabled :( Consider making a one off donation to TRTLv1vC1ptGWbaGCCE5qQXaoJLDzuxEM8NiLDaUECE1Nz5FHEPiv9i7Eh57NaGhYJhKP2ep3Z6Q6NsudcNaoS9HDJBfTfX1e1N") << std::endl;
+        std::cout << WarningMsg("Dev fee disabled :( Consider making a one off donation to "
+                                "TRTLv1vC1ptGWbaGCCE5qQXaoJLDzuxEM8NiLDaUECE1Nz5FHEPiv9i7Eh57NaGhYJhKP2ep3Z6Q6NsudcNaoS"
+                                "9HDJBfTfX1e1N")
+                  << std::endl;
 
         /* No dev fee, just start the users mining */
         userMinerManager.start();
@@ -203,8 +210,13 @@ int main(int argc, char **argv)
             /* Stop mining for the user */
             userMinerManager.stop();
 
-            std::cout << InformationMsg("=== Started mining to the development pool - Thank you for supporting violetminer! ===") << std::endl;
-            std::cout << InformationMsg("=== This will last for " + std::to_string(devMiningTime.count()) + " seconds. (Every 100 minutes) ===") << std::endl;
+            std::cout << InformationMsg(
+                             "=== Started mining to the development pool - Thank you for supporting violetminer! ===")
+                      << std::endl;
+            std::cout << InformationMsg(
+                             "=== This will last for " + std::to_string(devMiningTime.count())
+                             + " seconds. (Every 100 minutes) ===")
+                      << std::endl;
 
             /* Start mining for the dev */
             devMinerManager.start();
@@ -215,7 +227,8 @@ int main(int argc, char **argv)
             /* Stop mining for the dev. */
             devMinerManager.stop();
 
-            std::cout << InformationMsg("=== Regular mining resumed. Thank you for supporting violetminer! ===") << std::endl;
+            std::cout << InformationMsg("=== Regular mining resumed. Thank you for supporting violetminer! ===")
+                      << std::endl;
 
             /* Start mining for the user */
             userMinerManager.start();

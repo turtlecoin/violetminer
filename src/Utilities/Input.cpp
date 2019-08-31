@@ -6,9 +6,10 @@
 #include "Utilities/Input.h"
 ////////////////////////////
 
-#include <iostream>
 #include "Utilities/ColouredMsg.h"
 #include "Utilities/String.h"
+
+#include <iostream>
 
 namespace Utilities
 {
@@ -75,4 +76,3 @@ namespace Utilities
         }
     }
 } // namespace Utilities
-

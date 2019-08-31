@@ -19,11 +19,7 @@ Nvidia::Nvidia(
         hardwareConfig.nvidia.devices.begin(),
         hardwareConfig.nvidia.devices.end(),
         std::back_inserter(m_availableDevices),
-        [](const NvidiaDevice &device)
-        {
-            return device.enabled;
-        }
-    );
+        [](const NvidiaDevice &device) { return device.enabled; });
 
     m_numAvailableGPUs = m_availableDevices.size();
 }
@@ -94,27 +90,15 @@ std::vector<PerformanceStats> Nvidia::getPerformanceStats()
 
 std::shared_ptr<IHashingAlgorithm> getNvidiaMiningAlgorithm(const std::string &algorithm)
 {
-    switch(ArgonVariant::algorithmNameToCanonical(algorithm))
+    switch (ArgonVariant::algorithmNameToCanonical(algorithm))
     {
         case ArgonVariant::Chukwa:
         {
-            return std::make_shared<NvidiaHash>(
-                512,
-                3,
-                1,
-                16,
-                Constants::ARGON2ID
-            );
+            return std::make_shared<NvidiaHash>(512, 3, 1, 16, Constants::ARGON2ID);
         }
         case ArgonVariant::ChukwaWrkz:
         {
-            return std::make_shared<NvidiaHash>(
-                256,
-                4,
-                1,
-                16,
-                Constants::ARGON2ID
-            );
+            return std::make_shared<NvidiaHash>(256, 4, 1, 16, Constants::ARGON2ID);
         }
         default:
         {
@@ -150,10 +134,10 @@ void Nvidia::hash(const NvidiaDevice gpu, const uint32_t threadNumber)
                local nonce. We then wipe the bottom 3 bytes of job.nonce
                (*job.nonce() & 0xFF000000). Finally, we AND them together, so the
                top byte of the nonce is reserved for nicehash.
-               See further https://github.com/nicehash/Specifications/blob/master/NiceHash_CryptoNight_modification_v1.0.txt
-               Note that the above specification indicates that the final byte of
-               the nonce is reserved, but in fact it is the first byte that is 
-               reserved. */
+               See further
+               https://github.com/nicehash/Specifications/blob/master/NiceHash_CryptoNight_modification_v1.0.txt Note
+               that the above specification indicates that the final byte of the nonce is reserved, but in fact it is
+               the first byte that is reserved. */
             if (isNiceHash)
             {
                 *job.nonce() = (localNonce & 0x00FFFFFF) | (*job.nonce() & 0xFF000000);
@@ -165,7 +149,7 @@ void Nvidia::hash(const NvidiaDevice gpu, const uint32_t threadNumber)
 
             const auto hash = algorithm->hash(job.rawBlob);
 
-            m_submitHash({ hash, job.jobID, *job.nonce(), job.target });
+            m_submitHash({hash, job.jobID, *job.nonce(), job.target});
 
             localNonce += m_numAvailableGPUs;
         }
@@ -173,5 +157,4 @@ void Nvidia::hash(const NvidiaDevice gpu, const uint32_t threadNumber)
         /* Switch to new job. */
         m_newJobAvailable[threadNumber] = false;
     }
-
 }

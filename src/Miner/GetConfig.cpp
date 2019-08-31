@@ -6,8 +6,6 @@
 #include "Miner/GetConfig.h"
 ////////////////////////////
 
-#include <fstream>
-
 #include "Config/Constants.h"
 #include "ExternalLibs/cxxopts.hpp"
 #include "ExternalLibs/json.hpp"
@@ -16,6 +14,8 @@
 #include "Utilities/Input.h"
 #include "Utilities/String.h"
 
+#include <fstream>
+
 #if defined(X86_OPTIMIZATIONS)
 #include "cpu_features/include/cpuinfo_x86.h"
 #endif
@@ -23,13 +23,19 @@
 #if defined(NVIDIA_ENABLED)
 #include "MinerManager/Nvidia/NvidiaManager.h"
 #else
-std::vector<std::tuple<std::string, bool, int>> getNvidiaDevicesActual() { return {}; }
+std::vector<std::tuple<std::string, bool, int>> getNvidiaDevicesActual()
+{
+    return {};
+}
 #endif
 
 #if defined(AMD_ENABLED)
 #include "MinerManager/Amd/AmdManager.h"
 #else
-std::vector<AmdDevice> getAmdDevices() { return {}; }
+std::vector<AmdDevice> getAmdDevices()
+{
+    return {};
+}
 #endif
 
 std::vector<NvidiaDevice> getNvidiaDevices()
@@ -53,11 +59,9 @@ std::vector<NvidiaDevice> getNvidiaDevices()
 
 void to_json(nlohmann::json &j, const CpuConfig &config)
 {
-    j = {
-        {"enabled", config.enabled},
-        {"optimizationMethod", Constants::optimizationMethodToString(config.optimizationMethod)},
-        {"threadCount", config.threadCount}
-    };
+    j = {{"enabled", config.enabled},
+         {"optimizationMethod", Constants::optimizationMethodToString(config.optimizationMethod)},
+         {"threadCount", config.threadCount}};
 }
 
 void from_json(const nlohmann::json &j, CpuConfig &config)
@@ -80,13 +84,16 @@ void from_json(const nlohmann::json &j, CpuConfig &config)
     {
         const auto optimizations = getAvailableOptimizations();
 
-        config.optimizationMethod = Constants::optimizationMethodFromString(j.at("optimizationMethod").get<std::string>());
+        config.optimizationMethod =
+            Constants::optimizationMethodFromString(j.at("optimizationMethod").get<std::string>());
 
         const auto it = std::find(optimizations.begin(), optimizations.end(), config.optimizationMethod);
 
         if (it == optimizations.end())
         {
-            throw std::invalid_argument("Optimization " + Constants::optimizationMethodToString(config.optimizationMethod) + " is unavailable for your hardware.");
+            throw std::invalid_argument(
+                "Optimization " + Constants::optimizationMethodToString(config.optimizationMethod)
+                + " is unavailable for your hardware.");
         }
     }
     else
@@ -97,11 +104,7 @@ void from_json(const nlohmann::json &j, CpuConfig &config)
 
 void to_json(nlohmann::json &j, const NvidiaDevice &device)
 {
-    j = {
-        {"enabled", device.enabled},
-        {"name", device.name},
-        {"id", device.id}
-    };
+    j = {{"enabled", device.enabled}, {"name", device.name}, {"id", device.id}};
 }
 
 void from_json(const nlohmann::json &j, NvidiaDevice &device)
@@ -121,11 +124,7 @@ void from_json(const nlohmann::json &j, NvidiaDevice &device)
 
 void to_json(nlohmann::json &j, const AmdDevice &device)
 {
-    j = {
-        {"enabled", device.enabled},
-        {"name", device.name},
-        {"id", device.id}
-    };
+    j = {{"enabled", device.enabled}, {"name", device.name}, {"id", device.id}};
 }
 
 void from_json(const nlohmann::json &j, AmdDevice &device)
@@ -145,9 +144,7 @@ void from_json(const nlohmann::json &j, AmdDevice &device)
 
 void to_json(nlohmann::json &j, const NvidiaConfig &config)
 {
-    j = {
-        {"devices", config.devices}
-    };
+    j = {{"devices", config.devices}};
 }
 
 void from_json(const nlohmann::json &j, NvidiaConfig &config)
@@ -164,9 +161,7 @@ void from_json(const nlohmann::json &j, NvidiaConfig &config)
 
 void to_json(nlohmann::json &j, const AmdConfig &config)
 {
-    j = {
-        {"devices", config.devices}
-    };
+    j = {{"devices", config.devices}};
 }
 
 void from_json(const nlohmann::json &j, AmdConfig &config)
@@ -184,8 +179,7 @@ void from_json(const nlohmann::json &j, AmdConfig &config)
 void to_json(nlohmann::json &j, const HardwareConfig &config)
 {
     j = {
-        {"cpu", config.cpu},
-        {"nvidia", config.nvidia},
+        {"cpu", config.cpu}, {"nvidia", config.nvidia},
         /*{"amd", config.amd}*/
     };
 }
@@ -223,10 +217,7 @@ void from_json(const nlohmann::json &j, HardwareConfig &config)
 
 void to_json(nlohmann::json &j, const MinerConfig &config)
 {
-    j = {
-        {"pools", config.pools},
-        {"hardwareConfiguration", config.hardwareConfiguration}
-    };
+    j = {{"pools", config.pools}, {"hardwareConfiguration", config.hardwareConfiguration}};
 }
 
 void from_json(const nlohmann::json &j, MinerConfig &config)
@@ -253,13 +244,13 @@ Constants::OptimizationMethod getAutoChosenOptimization()
         best = Constants::NONE;
     }
 
-    #if defined(ARMV8_OPTIMIZATIONS)
+#if defined(ARMV8_OPTIMIZATIONS)
     /* We don't enable NEON optimizations by default on Armv8: https://github.com/weidai11/cryptopp/issues/367 */
     if (best == Constants::NEON)
     {
         best = Constants::NONE;
     }
-    #endif
+#endif
 
     return best;
 }
@@ -268,7 +259,7 @@ std::vector<Constants::OptimizationMethod> getAvailableOptimizations()
 {
     std::vector<Constants::OptimizationMethod> availableOptimizations;
 
-    #if defined(X86_OPTIMIZATIONS)
+#if defined(X86_OPTIMIZATIONS)
 
     static const cpu_features::X86Features features = cpu_features::GetX86Info().features;
 
@@ -297,15 +288,15 @@ std::vector<Constants::OptimizationMethod> getAvailableOptimizations()
         availableOptimizations.push_back(Constants::SSE2);
     }
 
-    #elif defined(ARMV8_OPTIMIZATIONS)
+#elif defined(ARMV8_OPTIMIZATIONS)
 
     availableOptimizations.push_back(Constants::NEON);
 
-    #endif
+#endif
 
     availableOptimizations.push_back(Constants::AUTO);
     availableOptimizations.push_back(Constants::NONE);
-    
+
     return availableOptimizations;
 }
 
@@ -333,7 +324,8 @@ Pool getPool()
 
         if (!Utilities::parseAddressFromString(host, port, address))
         {
-            std::cout << WarningMsg("Invalid pool address! Should be in the form host:port, for example, trtl.pool.mine2gether.com:3335!")
+            std::cout << WarningMsg("Invalid pool address! Should be in the form host:port, for example, "
+                                    "trtl.pool.mine2gether.com:3335!")
                       << std::endl;
 
             continue;
@@ -410,8 +402,11 @@ Pool getPool()
         }
     }
 
-    std::cout << InformationMsg("\nEnter the rig ID to use with this pool. This can identify your different computers to the pool.") << std::endl
-              << InformationMsg("You can leave this blank if desired: ");
+    std::cout
+        << InformationMsg(
+               "\nEnter the rig ID to use with this pool. This can identify your different computers to the pool.")
+        << std::endl
+        << InformationMsg("You can leave this blank if desired: ");
 
     std::string rigID;
 
@@ -460,9 +455,12 @@ void writeConfigToDisk(MinerConfig config)
     }
     else
     {
-        std::cout << WarningMsg("Failed to write config to disk. Please check that the program can write to the folder you launched it from.")
-                  << std::endl << std::endl
-                  << "Config:" << std::endl << j.dump(4) << std::endl;
+        std::cout << WarningMsg("Failed to write config to disk. Please check that the program can write to the folder "
+                                "you launched it from.")
+                  << std::endl
+                  << std::endl
+                  << "Config:" << std::endl
+                  << j.dump(4) << std::endl;
     }
 }
 
@@ -490,8 +488,8 @@ MinerConfig getConfigFromJSON(const std::string &configLocation)
     {
         std::stringstream stream;
 
-        stream << "Failed to open config file \"" << configLocation
-               << "\"." << std::endl << "Does the file exist?" << std::endl;
+        stream << "Failed to open config file \"" << configLocation << "\"." << std::endl
+               << "Does the file exist?" << std::endl;
 
         std::cout << WarningMsg(stream.str());
 
@@ -500,8 +498,7 @@ MinerConfig getConfigFromJSON(const std::string &configLocation)
 
     try
     {
-        std::string fileContents((std::istreambuf_iterator<char>(configFile)),
-                                 (std::istreambuf_iterator<char>()));
+        std::string fileContents((std::istreambuf_iterator<char>(configFile)), (std::istreambuf_iterator<char>()));
 
         const MinerConfig jsonConfig = nlohmann::json::parse(fileContents);
 
@@ -511,8 +508,7 @@ MinerConfig getConfigFromJSON(const std::string &configLocation)
     }
     catch (const nlohmann::json::exception &e)
     {
-        std::cout << WarningMsg("Failed to parse config file: ")
-                  << WarningMsg(e.what()) << std::endl
+        std::cout << WarningMsg("Failed to parse config file: ") << WarningMsg(e.what()) << std::endl
                   << "Try pasting your config file (" << configLocation << ") into "
                   << InformationMsg("https://jsonformatter.curiousconcept.com/")
                   << " to figure out which line is invalid." << std::endl;
@@ -521,15 +517,13 @@ MinerConfig getConfigFromJSON(const std::string &configLocation)
     }
     catch (const std::invalid_argument &e)
     {
-        std::cout << WarningMsg("Config file is invalid: ")
-                  << WarningMsg(e.what()) << std::endl;
+        std::cout << WarningMsg("Config file is invalid: ") << WarningMsg(e.what()) << std::endl;
 
         Console::exitOrWaitForInput(1);
     }
     catch (const std::exception &e)
     {
-        std::cout << WarningMsg("Failed to read from config file: ")
-                  << WarningMsg(e.what()) << std::endl;
+        std::cout << WarningMsg("Failed to read from config file: ") << WarningMsg(e.what()) << std::endl;
 
         Console::exitOrWaitForInput(1);
     }
@@ -551,36 +545,42 @@ MinerConfig getMinerConfig(int argc, char **argv)
 
     cxxopts::Options options(argv[0], "");
 
-    options.add_options("Core")
-        ("h,help", "Display this help message",
-         cxxopts::value<bool>(help)->implicit_value("true"))
+    options.add_options("Core")(
+        "h,help", "Display this help message", cxxopts::value<bool>(help)->implicit_value("true"))
 
-        ("v,version", "Display the miner version",
-         cxxopts::value<bool>(version)->implicit_value("true"))
+        ("v,version", "Display the miner version", cxxopts::value<bool>(version)->implicit_value("true"))
 
-        ("config", "The location of the config file to use",
-         cxxopts::value<std::string>(config.configLocation), "<file>");
+            ("config",
+             "The location of the config file to use",
+             cxxopts::value<std::string>(config.configLocation),
+             "<file>");
 
-    options.add_options("Pool")
-        ("pool", "The pool <host:port> combination to mine to",
-         cxxopts::value<std::string>(poolAddress), "<host:port>")
+    options.add_options("Pool")(
+        "pool", "The pool <host:port> combination to mine to", cxxopts::value<std::string>(poolAddress), "<host:port>")
 
-        ("username", "The username to use with the pool, normally your wallet address",
-         cxxopts::value<std::string>(poolConfig.username), "<username>")
+        ("username",
+         "The username to use with the pool, normally your wallet address",
+         cxxopts::value<std::string>(poolConfig.username),
+         "<username>")
 
-        ("password", "The password to use with the pool, can be omitted",
-         cxxopts::value<std::string>(poolConfig.password), "<password>")
+            ("password",
+             "The password to use with the pool, can be omitted",
+             cxxopts::value<std::string>(poolConfig.password),
+             "<password>")
 
-        ("rigid", "The rig ID to use with the pool, can be omitted",
-         cxxopts::value<std::string>(poolConfig.rigID), "<rig ID>");
+                ("rigid",
+                 "The rig ID to use with the pool, can be omitted",
+                 cxxopts::value<std::string>(poolConfig.rigID),
+                 "<rig ID>");
 
-    options.add_options("Miner")
-        ("algorithm", "The mining algorithm to use",
-         cxxopts::value<std::string>(poolConfig.algorithm), "<algorithm>")
+    options.add_options("Miner")(
+        "algorithm", "The mining algorithm to use", cxxopts::value<std::string>(poolConfig.algorithm), "<algorithm>")
 
-        ("threads", "The number of mining threads to use",
-         cxxopts::value<uint32_t>(config.hardwareConfiguration.cpu.threadCount)->default_value(
-            std::to_string(config.hardwareConfiguration.cpu.threadCount)), "<threads>");
+        ("threads",
+         "The number of mining threads to use",
+         cxxopts::value<uint32_t>(config.hardwareConfiguration.cpu.threadCount)
+             ->default_value(std::to_string(config.hardwareConfiguration.cpu.threadCount)),
+         "<threads>");
 
     try
     {
@@ -620,7 +620,7 @@ MinerConfig getMinerConfig(int argc, char **argv)
         }
         else
         {
-            const std::vector<std::string> requiredArgs { "pool", "username", "algorithm" };
+            const std::vector<std::string> requiredArgs {"pool", "username", "algorithm"};
 
             for (const auto &arg : requiredArgs)
             {
@@ -649,7 +649,8 @@ MinerConfig getMinerConfig(int argc, char **argv)
             }
             catch (const std::exception &)
             {
-                std::cout << WarningMsg("Algorithm \"" + poolConfig.algorithm + "\" is not a known algorithm!") << std::endl;
+                std::cout << WarningMsg("Algorithm \"" + poolConfig.algorithm + "\" is not a known algorithm!")
+                          << std::endl;
 
                 std::cout << InformationMsg("Available mining algorithms:") << std::endl;
 
@@ -676,8 +677,8 @@ MinerConfig getMinerConfig(int argc, char **argv)
     }
     catch (const cxxopts::OptionException &e)
     {
-        std::cout << WarningMsg("Error: Unable to parse command line options: ") << WarningMsg(e.what())
-                  << std::endl << std::endl
+        std::cout << WarningMsg("Error: Unable to parse command line options: ") << WarningMsg(e.what()) << std::endl
+                  << std::endl
                   << options.help({}) << std::endl;
 
         Console::exitOrWaitForInput(1);

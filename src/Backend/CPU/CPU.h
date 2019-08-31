@@ -4,16 +4,15 @@
 
 #pragma once
 
-#include <atomic>
-
 #include "Backend/IBackend.h"
 #include "Types/JobSubmit.h"
+
+#include <atomic>
 
 class CPU : virtual public IBackend
 {
   public:
-    CPU(
-        const HardwareConfig &hardwareConfig,
+    CPU(const HardwareConfig &hardwareConfig,
         const std::function<void(const JobSubmit &jobSubmit)> &submitHashCallback);
 
     virtual void start(const Job &job, const uint32_t initialNonce);
@@ -25,7 +24,6 @@ class CPU : virtual public IBackend
     virtual std::vector<PerformanceStats> getPerformanceStats();
 
   private:
-
     void hash(const uint32_t threadNumber);
 
     /* Current job to be working on */

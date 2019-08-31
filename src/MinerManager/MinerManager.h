@@ -4,23 +4,21 @@
 
 #pragma once
 
+#include "Backend/IBackend.h"
+#include "Miner/GetConfig.h"
+#include "MinerManager/HashManager.h"
+#include "PoolCommunication/PoolCommunication.h"
+#include "Types/IHashingAlgorithm.h"
+
 #include <memory>
 #include <random>
 #include <thread>
-
-#include "Backend/IBackend.h"
-#include "MinerManager/HashManager.h"
-#include "Miner/GetConfig.h"
-#include "PoolCommunication/PoolCommunication.h"
-#include "Types/IHashingAlgorithm.h"
 
 class MinerManager
 {
   public:
     /* CONSTRUCTOR */
-    MinerManager(
-        const std::shared_ptr<PoolCommunication> pool,
-        const HardwareConfig hardwareConfig);
+    MinerManager(const std::shared_ptr<PoolCommunication> pool, const HardwareConfig hardwareConfig);
 
     /* DESTRUCTOR */
     ~MinerManager();
@@ -33,7 +31,6 @@ class MinerManager
     void printStats();
 
   private:
-
     /* PRIVATE METHODS */
     void setNewJob(const Job &job);
 

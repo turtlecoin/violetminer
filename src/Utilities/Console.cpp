@@ -8,15 +8,15 @@
 #include <string>
 
 #ifdef _WIN32
-    #ifndef NOMINMAX
-        #define NOMINMAX
-    #endif
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
 
-    #include <Windows.h>
-    #include <io.h>
+#include <Windows.h>
+#include <io.h>
 #else
-    #include <iostream>
-    #include <unistd.h>
+#include <iostream>
+#include <unistd.h>
 #endif
 
 namespace Console
@@ -26,12 +26,12 @@ namespace Console
        error causing us to early exit. */
     void exitOrWaitForInput(int exitCode)
     {
-        #if defined(__APPLE__) || defined(WIN32)
+#if defined(__APPLE__) || defined(WIN32)
         std::cout << "Hit any key to exit: " << std::endl;
 
         std::string dummy;
         std::getline(std::cin, dummy);
-        #endif
+#endif
 
         exit(exitCode);
     }

@@ -107,10 +107,10 @@ void CPU::hash(const uint32_t threadNumber)
                local nonce. We then wipe the bottom 3 bytes of job.nonce
                (*job.nonce() & 0xFF000000). Finally, we AND them together, so the
                top byte of the nonce is reserved for nicehash.
-               See further https://github.com/nicehash/Specifications/blob/master/NiceHash_CryptoNight_modification_v1.0.txt
-               Note that the above specification indicates that the final byte of
-               the nonce is reserved, but in fact it is the first byte that is 
-               reserved. */
+               See further
+               https://github.com/nicehash/Specifications/blob/master/NiceHash_CryptoNight_modification_v1.0.txt Note
+               that the above specification indicates that the final byte of the nonce is reserved, but in fact it is
+               the first byte that is reserved. */
             if (isNiceHash)
             {
                 *job.nonce() = (localNonce & 0x00FFFFFF) | (*job.nonce() & 0xFF000000);
@@ -122,7 +122,7 @@ void CPU::hash(const uint32_t threadNumber)
 
             const auto hash = algorithm->hash(job.rawBlob);
 
-            m_submitHash({ hash, job.jobID, *job.nonce(), job.target });
+            m_submitHash({hash, job.jobID, *job.nonce(), job.target});
 
             localNonce += m_hardwareConfig.cpu.threadCount;
         }

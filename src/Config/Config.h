@@ -2,9 +2,9 @@
 //
 // Please see the included LICENSE file for more information.
 
-#include <string>
-
 #include "Argon2/Constants.h"
+
+#include <string>
 
 namespace Config
 {
@@ -17,4 +17,4 @@ namespace Config
     };
 
     extern Config config;
-}
+} // namespace Config

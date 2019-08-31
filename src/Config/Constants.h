@@ -21,4 +21,4 @@ namespace Constants
 
     /* Name of config file to look for */
     const std::string CONFIG_FILE_NAME = "config.json";
-}
+} // namespace Constants

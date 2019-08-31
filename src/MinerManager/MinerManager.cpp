@@ -6,32 +6,27 @@
 #include "MinerManager/MinerManager.h"
 //////////////////////////////////////
 
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-
 #include "Backend/CPU/CPU.h"
 #include "Types/JobSubmit.h"
 #include "Utilities/ColouredMsg.h"
 #include "Utilities/Utilities.h"
+
+#include <iomanip>
+#include <iostream>
+#include <sstream>
 
 #if defined(NVIDIA_ENABLED)
 #include "Backend/Nvidia/Nvidia.h"
 #include "MinerManager/Nvidia/NvidiaManager.h"
 #endif
 
-MinerManager::MinerManager(
-    const std::shared_ptr<PoolCommunication> pool,
-    const HardwareConfig hardwareConfig):
+MinerManager::MinerManager(const std::shared_ptr<PoolCommunication> pool, const HardwareConfig hardwareConfig):
     m_pool(pool),
     m_hardwareConfig(hardwareConfig),
     m_hashManager(pool),
     m_gen(m_device())
 {
-    const auto submit = [this](const JobSubmit &jobSubmit)
-    {
-        m_hashManager.submitHash(jobSubmit);
-    };
+    const auto submit = [this](const JobSubmit &jobSubmit) { m_hashManager.submitHash(jobSubmit); };
 
     if (hardwareConfig.cpu.enabled)
     {
@@ -76,24 +71,16 @@ void MinerManager::start()
     m_shouldStop = false;
 
     /* Hook up the function to set a new job when it arrives */
-    m_pool->onNewJob([this](const Job &job){
-        setNewJob(job);
-    });
+    m_pool->onNewJob([this](const Job &job) { setNewJob(job); });
 
     /* Pass through accepted shares to the hash manager */
-    m_pool->onHashAccepted([this](const auto &){
-        m_hashManager.shareAccepted();
-    });
+    m_pool->onHashAccepted([this](const auto &) { m_hashManager.shareAccepted(); });
 
     /* Start mining when we connect to a pool */
-    m_pool->onPoolSwapped([this](const Pool &newPool){
-        resumeMining();
-    });
+    m_pool->onPoolSwapped([this](const Pool &newPool) { resumeMining(); });
 
     /* Stop mining when we disconnect */
-    m_pool->onPoolDisconnected([this](){
-        pauseMining();
-    });
+    m_pool->onPoolDisconnected([this]() { pauseMining(); });
 
     /* Start listening for messages from the pool */
     m_pool->startManaging();
@@ -132,7 +119,7 @@ void MinerManager::resumeMining()
 
 void MinerManager::startNvidiaMining()
 {
-    #if defined(NVIDIA_ENABLED)
+#if defined(NVIDIA_ENABLED)
     int maxErrorCount = 5;
     int currentErrorCount = 0;
 
@@ -141,13 +128,9 @@ void MinerManager::startNvidiaMining()
     auto lastErrorAt = std::chrono::high_resolution_clock::now();
 
     const bool allNvidiaGPUsDisabled = std::none_of(
-        m_hardwareConfig.nvidia.devices.begin(),
-        m_hardwareConfig.nvidia.devices.end(),
-        [](const auto device)
-        {
+        m_hardwareConfig.nvidia.devices.begin(), m_hardwareConfig.nvidia.devices.end(), [](const auto device) {
             return device.enabled;
-        }
-    );
+        });
 
     while (true)
     {
@@ -178,13 +161,15 @@ void MinerManager::startNvidiaMining()
                    attempting to restart, it ain't working. */
                 if (currentErrorCount > maxErrorCount)
                 {
-                    std::cout << WarningMsg("Too many errors in a short period of time. Cancelling Nvidia Mining.\n") << std::endl;
+                    std::cout << WarningMsg("Too many errors in a short period of time. Cancelling Nvidia Mining.\n")
+                              << std::endl;
                     return;
                 }
 
                 lastErrorAt = now;
 
-                std::cout << WarningMsg("Error performining mining on Nvidia GPU: " + std::string(e.what())) << std::endl;
+                std::cout << WarningMsg("Error performining mining on Nvidia GPU: " + std::string(e.what()))
+                          << std::endl;
                 std::cout << InformationMsg("Restarting Nvidia mining...\n") << std::endl;
 
                 /* TODO: Remove */
@@ -195,14 +180,15 @@ void MinerManager::startNvidiaMining()
         }
         else
         {
-            std::cout << WarningMsg("No Nvidia GPUs available, or all disabled, not starting Nvidia mining") << std::endl;
+            std::cout << WarningMsg("No Nvidia GPUs available, or all disabled, not starting Nvidia mining")
+                      << std::endl;
             return;
         }
 
         /* TODO: Remove */
         return;
     }
-    #endif
+#endif
 }
 
 void MinerManager::pauseMining()

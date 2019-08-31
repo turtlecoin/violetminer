@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include <tuple>
 #include <string>
+#include <tuple>
 #include <vector>
 
 std::vector<std::tuple<std::string, bool, int>> getNvidiaDevicesActual();

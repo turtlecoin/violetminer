@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include <atomic>
-
 #include "Backend/IBackend.h"
 #include "Types/JobSubmit.h"
+
+#include <atomic>
 
 class Nvidia : virtual public IBackend
 {
@@ -25,7 +25,6 @@ class Nvidia : virtual public IBackend
     virtual std::vector<PerformanceStats> getPerformanceStats();
 
   private:
-
     void hash(const NvidiaDevice gpu, const uint32_t threadNumber);
 
     /* Current job to be working on */

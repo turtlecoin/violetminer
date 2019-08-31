@@ -4,12 +4,12 @@
 
 #pragma once
 
+#include "ExternalLibs/json.hpp"
+#include "Utilities/String.h"
+
 #include <optional>
 #include <string>
 #include <variant>
-
-#include "ExternalLibs/json.hpp"
-#include "Utilities/String.h"
 
 struct PoolError
 {
@@ -257,9 +257,4 @@ inline void from_json(const nlohmann::json &j, StatusMessage &s)
     s.status = result.at("status").get<std::string>();
 }
 
-std::variant<
-    JobMessage,
-    ErrorMessage,
-    LoginMessage,
-    StatusMessage
-> parsePoolMessage(const std::string &message);
+std::variant<JobMessage, ErrorMessage, LoginMessage, StatusMessage> parsePoolMessage(const std::string &message);

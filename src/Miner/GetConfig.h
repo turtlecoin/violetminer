@@ -4,11 +4,11 @@
 
 #pragma once
 
+#include "Argon2/Constants.h"
+#include "Types/Pool.h"
+
 #include <string>
 #include <thread>
-
-#include "Types/Pool.h"
-#include "Argon2/Constants.h"
 
 struct NvidiaDevice
 {

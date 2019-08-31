@@ -6,12 +6,7 @@
 #include "Types/PoolMessage.h"
 //////////////////////////////
 
-std::variant<
-    JobMessage,
-    ErrorMessage,
-    LoginMessage,
-    StatusMessage
-> parsePoolMessage(const std::string &message)
+std::variant<JobMessage, ErrorMessage, LoginMessage, StatusMessage> parsePoolMessage(const std::string &message)
 {
     try
     {
