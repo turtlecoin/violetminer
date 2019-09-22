@@ -427,7 +427,7 @@ Pool getPool()
             /* We don't print every single alias because it would get a little silly. */
             if (shouldDisplay)
             {
-                std::cout << SuccessMsg("(") << SuccessMsg(i) << SuccessMsg (") ") << SuccessMsg(algorithmName) << std::endl;
+                std::cout << SuccessMsg("(" + std::to_string(i) + ") " + algorithmName) << std::endl;
                 i++;
             }
         }
