@@ -450,7 +450,7 @@ Pool getPool()
             algorithmNumber = std::stoi(algorithm);
             std::cout << InformationMsg("\nYou've selected algorithm number ") << InformationMsg(algorithmNumber) << InformationMsg(".\n");
         }
-        catch (const std::exception &)
+        catch (const std::invalid_argument &)
         {
             std::cout << InformationMsg("\nYou've selected algorithm ") << InformationMsg(algorithm) << InformationMsg(".\n");
         }
