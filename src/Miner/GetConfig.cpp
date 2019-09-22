@@ -468,7 +468,7 @@ Pool getPool()
             }
             else
             {
-                std::cout << WarningMsg("The selection you provided, \"" + std::to_string(algorithmNumber) + "\", does not exist. Expected a number between 1-" + std::to_string(i)) << std::endl;
+                std::cout << WarningMsg("Bad input, expected an algorithm name, or number from ") << InformationMsg("1") << WarningMsg(" to ") << InformationMsg(availableAlgorithms.size()) << std::endl;
                 continue;
             }
         } 
