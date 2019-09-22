@@ -423,7 +423,7 @@ Pool getPool()
         std::cout << InformationMsg("\nAvailable mining algorithms:") << std::endl;
 
         int i = 1;
-        std::string availableAlgorithms[20];
+        std::unordered_map<int, std:: string> availableAlgorithms;
         for (const auto [algorithmName, algoEnum, shouldDisplay] : ArgonVariant::algorithmNameMapping)
         {
             /* We don't print every single alias because it would get a little silly. */
@@ -461,7 +461,15 @@ Pool getPool()
 
         if (algorithmIsNumber) 
         {
-            algorithm = availableAlgorithms[algorithmNumber];
+            auto selectedAlgorithm = availableAlgorithms.find(algorithmNumber); // finding if item is present in map
+            if (selectedAlgorithm != availableAlgorithms.end())
+            {
+                algorithm = selectedAlgorithm->second;
+            }
+            else
+            {
+                std::cout << WarningMsg("Unknown algorithm \"" + std::to_string(algorithmNumber) + "\". Try again.") << std::endl;
+            }
         } 
 
         try
@@ -472,11 +480,6 @@ Pool getPool()
         }
         catch (const std::exception &)
         {   
-            if (algorithmIsNumber)
-            {
-                std::cout << WarningMsg("Unknown algorithm \"" + std::to_string(algorithmNumber) + "\". Try again.") << std::endl;
-                continue;
-            }
             std::cout << WarningMsg("Unknown algorithm \"" + algorithm + "\". Try again.") << std::endl;
         }
     }
