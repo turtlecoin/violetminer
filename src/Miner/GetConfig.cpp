@@ -461,15 +461,7 @@ Pool getPool()
 
         if (algorithmIsNumber) 
         {
-            try
-            {
-                algorithm = availableAlgorithms[algorithmNumber];
-            }
-            catch ( const std::exception &)
-            {
-                std::cout << WarningMsg("Unknown algorithm \"" + algorithm + "\". Try again.") << std::endl;
-                continue;
-            }
+            algorithm = availableAlgorithms[algorithmNumber];
         } 
 
         try
@@ -479,7 +471,12 @@ Pool getPool()
             break;
         }
         catch (const std::exception &)
-        {
+        {   
+            if (algorithmIsNumber)
+            {
+                std::cout << WarningMsg("Unknown algorithm \"" + std::to_string(algorithmNumber) + "\". Try again.") << std::endl;
+                continue;
+            }
             std::cout << WarningMsg("Unknown algorithm \"" + algorithm + "\". Try again.") << std::endl;
         }
     }
