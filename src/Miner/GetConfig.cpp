@@ -439,6 +439,7 @@ Pool getPool()
         std::getline(std::cin, algorithm);
 
         int algorithmNumber;
+        bool algorithmIsNumber;
 
         if (algorithm == "")
         {
@@ -448,14 +449,14 @@ Pool getPool()
         try
         {
             algorithmNumber = std::stoi(algorithm);
-            std::cout << InformationMsg("\nYou've selected algorithm number ") << InformationMsg(algorithmNumber) << InformationMsg(".\n");
+            algorithmIsNumber = true;
         }
         catch (const std::exception &)
         {
-            std::cout << InformationMsg("\nYou've selected algorithm ") << InformationMsg(algorithm) << InformationMsg(".\n");
+            algorithmIsNumber = false;
         }
 
-        if (algorithmNumber) 
+        if (algorithmIsNumber) 
         {
             switch(algorithmNumber)
             {
