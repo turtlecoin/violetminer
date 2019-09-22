@@ -421,13 +421,16 @@ Pool getPool()
     while (true)
     {
         std::cout << InformationMsg("\nAvailable mining algorithms:") << std::endl;
+
         int i = 1;
+        std::string availableAlgorithms[20];
         for (const auto [algorithmName, algoEnum, shouldDisplay] : ArgonVariant::algorithmNameMapping)
         {
             /* We don't print every single alias because it would get a little silly. */
             if (shouldDisplay)
             {
                 std::cout << SuccessMsg("(" + std::to_string(i) + ") " + algorithmName) << std::endl;
+                availableAlgorithms[i] = algorithmName;
                 i++;
             }
         }
@@ -458,23 +461,14 @@ Pool getPool()
 
         if (algorithmIsNumber) 
         {
-            switch(algorithmNumber)
+            try
             {
-                case 1:
-                    algorithm = "chukwa";
-                    break;
-                case 2:
-                    algorithm = "turtlecoin";
-                    break;
-                case 3:
-                    algorithm = "chukwa_wrkz";
-                    break;
-                case 4:
-                    algorithm = "wrkzcoin";
-                    break;
-                default:
-                    algorithm = "turtlecoin";
-                    break;
+                algorithm = availableAlgorithms[algorithmNumber];
+            }
+            catch ( const std::exception &)
+            {
+                std::cout << WarningMsg("Unknown algorithm \"" + algorithm + "\". Try again.") << std::endl;
+                continue;
             }
         } 
 
