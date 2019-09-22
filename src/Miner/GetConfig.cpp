@@ -480,7 +480,7 @@ Pool getPool()
             break;
         }
         catch (const std::exception &)
-        {   
+        {
             std::cout << WarningMsg("Unknown algorithm \"" + algorithm + "\". Try again.") << std::endl;
         }
     }
