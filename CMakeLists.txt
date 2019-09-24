@@ -117,10 +117,6 @@ if (OPENSSL_FOUND)
     add_definitions(-DSOCKETWRAPPER_OPENSSL_SUPPORT)
 
     message(STATUS "OpenSSL Found: ${OPENSSL_INCLUDE_DIR}")
-    
-    message(STATUS "OPENSSL_SSL_LIBRARY: ${OPENSSL_SSL_LIBRARY}")
-    message(STATUS "OPENSSL_CRYPTO_LIBRARY: ${OPENSSL_CRYPTO_LIBRARY}")
-    message(STATUS "OPENSSL_LIBRARIES: ${OPENSSL_LIBRARIES}")
 elseif(ENABLE_SSL)
     message(STATUS "OpenSSL Found: No... Skipping...")
 else()
