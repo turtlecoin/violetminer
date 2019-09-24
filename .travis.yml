@@ -141,10 +141,10 @@ matrix:
     - 7z x $CUDA_ARCHIVE > nul
     - wget -nv https://slproweb.com/download/Win64OpenSSL-1_1_0L.exe
     - PowerShell -Command "Start-Process -FilePath \"Win64OpenSSL-1_1_0L.exe\" -ArgumentList \"/silent /verysilent /sp- /suppressmsgboxes\" -Wait -NoNewWindow"
-    - wget -nv https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win64-mingw.zip
-    - unzip openssl-1.1.1d-win64-mingw.zip
+    - wget -nv -O openssl.zip https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win64-mingw.zip
+    - unzip openssl.zip
     - ls
-    - ls openssl-1.1.1d-win64-mingw.zip
+    - ls openssl
     - ls C:/OpenSSL-Win64/lib/VC/static/
     - ./scripts/win-install.bat
     - cd build
