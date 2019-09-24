@@ -139,8 +139,8 @@ matrix:
     - wget -nv https://developer.download.nvidia.com/compute/cuda/$CUDA_VER/Prod/local_installers/$CUDA_ARCHIVE
     - PowerShell -Command "Start-Process -FilePath \"$CUDA_ARCHIVE\" -ArgumentList \"-s nvcc_$CUDA_VER\" -Wait -NoNewWindow"
     - 7z x $CUDA_ARCHIVE > nul
-    - wget -nv https://slproweb.com/download/Win64OpenSSL_Light-1_1_1d.exe
-    - PowerShell -Command "Start-Process -FilePath \"Win64OpenSSL_Light-1_1_1d.exe\" -ArgumentList \"/silent /verysilent /sp- /suppressmsgboxes\" -Wait -NoNewWindow"
+    - wget -nv https://slproweb.com/download/Win64OpenSSL-1_1_1d.exe
+    - PowerShell -Command "Start-Process -FilePath \"Win64OpenSSL-1_1_1d.exe\" -ArgumentList \"/silent /verysilent /sp- /suppressmsgboxes\" -Wait -NoNewWindow"
     - ls C:/OpenSSL-Win64/lib/VC/static/
     - ./scripts/win-install.bat
     - cd build
