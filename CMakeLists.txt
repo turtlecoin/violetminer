@@ -53,7 +53,12 @@ set(FORCE_ARCH "" CACHE STRING "Force the architecture to the specific string")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/src/Argon2/src/Intrinsics")
 
 # Use the TargetArch module to figure out what arch we're compiling for
-include(TargetArch)
+include(TargetArch OPTIONAL RESULT_VARIABLE FOUND_TARGET_ARCH)
+
+if("${FOUND_TARGET_ARCH}" STREQUAL "NOTFOUND")
+    message(FATAL_ERROR "It looks like you haven't fetched the git submodules. Please run \'git submodule update --init --recursive\' and read the build guide carefully.")
+endif()
+
 target_architecture(ARCH)
 
 if("${ARCH}" STREQUAL "x86_64")
