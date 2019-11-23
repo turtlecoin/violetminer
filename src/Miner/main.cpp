@@ -143,11 +143,8 @@ int main(int argc, char **argv)
     /* Set the global config */
     Config::config.optimizationMethod = config.hardwareConfiguration->cpu.optimizationMethod;
 
-    /* If not initial startup, print welcome header */
-    if (!config.interactive)
-    {
-        printWelcomeHeader(config);
-    }
+    /* Print welcome header, version, devices, etc */
+    printWelcomeHeader(config);
 
     const auto userPoolManager = std::make_shared<PoolCommunication>(config.pools);
 

@@ -598,7 +598,6 @@ MinerConfig getConfigInteractively()
     config.hardwareConfiguration->amd.devices = getAmdDevices();
     config.hardwareConfiguration->cpu.enabled = true;
     config.hardwareConfiguration->cpu.optimizationMethod = Constants::AUTO;
-    config.interactive = true;
 
     writeConfigToDisk(config);
 

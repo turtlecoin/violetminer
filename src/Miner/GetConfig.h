@@ -181,8 +181,6 @@ struct MinerConfig
 
     std::string configLocation;
 
-    bool interactive = false;
-
     std::shared_ptr<HardwareConfig> hardwareConfiguration = std::make_shared<HardwareConfig>();
 };
 
