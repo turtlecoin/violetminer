@@ -196,6 +196,8 @@ Pool getPool();
 
 std::vector<Pool> getPools();
 
+void writeConfigToDisk(MinerConfig config, const std::string &configLocation);
+
 MinerConfig getConfigInteractively();
 
 MinerConfig getConfigFromJSON(const std::string &configLocation);
