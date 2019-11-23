@@ -255,7 +255,7 @@ void Nvidia::hash(NvidiaDevice &gpu, const uint32_t threadNumber)
              * to fetch it to ensure we're not doing duplicate work. */
             if (!nonceInfo.allHardwareInitialized)
             {
-                nonceInfo = m_hardwareConfig->getNonceOffsetInfo("cpu");
+                nonceInfo = m_hardwareConfig->getNonceOffsetInfo("nvidia", gpu.id);
             }
         }
 
