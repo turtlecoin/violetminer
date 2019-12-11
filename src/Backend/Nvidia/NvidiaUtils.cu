@@ -12,14 +12,28 @@
 int getDeviceCount()
 {
     int numberDevices;
-    cudaGetDeviceCount(&numberDevices);
+
+    cudaError_t err = cudaGetDeviceCount(&numberDevices);
+
+    if (err != cudaSuccess)
+    {
+        return 0;
+    }
+
     return numberDevices;
 }
 
 std::string getDeviceName(uint16_t deviceId)
 {
     cudaDeviceProp prop;
-    cudaGetDeviceProperties(&prop, deviceId);
+
+    cudaError_t err = cudaGetDeviceProperties(&prop, deviceId);
+
+    if (err != cudaSuccess)
+    {
+        return "";
+    }
+
     return prop.name;
 }
 
@@ -31,7 +45,14 @@ std::vector<std::tuple<std::string, bool, int>> getNvidiaDevicesActual()
 
     for (int i = 0; i < numberDevices; i++)
     {
-        devices.push_back(std::make_tuple(getDeviceName(i), true, i));
+        const auto device = getDeviceName(i);
+
+        if (device == "")
+        {
+            continue;
+        }
+
+        devices.push_back(std::make_tuple(device, true, i));
     }
 
     return devices;
