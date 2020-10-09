@@ -14,7 +14,7 @@ A CPU and NVIDIA miner for TurtleCoin / Chukwa / Argon2id / WrkzCoin.
 
 ## Download
 
-[Go here to download the latest release.](https://github.com/turtlecoin/violetminer/releases) 
+[Go here to download the latest release.](https://github.com/turtlecoin/violetminer/releases)
 
 If you prefer to compile yourself, read on. This can result in increased hashrates in some cases.
 
@@ -25,10 +25,9 @@ If you're an arch user, you can install the [violetminer-bin](https://aur.archli
 We suggest you follow the [guide here](https://docs.turtlecoin.lol/guides/mining/violetminer-guide) to setup your miner.
 
 ## Algorithms Supported
-* TurtleCoin - choose `turtlecoin` or `chukwa`
+* TurtleCoin (ChukwaV2) - choose `turtlecoin` or `chukwa_v2`
 * WrkzCoin - choose `wrkzcoin` or `chukwa_wrkz`
-
-Want the miner to support another argon coin? Open an issue, or even better, open a pull request!
+* Chukwa - choose `chukwa`
 
 ## Notes
 
@@ -68,7 +67,7 @@ For example:
                     "desktopLag": 100.0,
                     "enabled": true,
                     "id": 0,
-                    "intensity": 50.0,
+                    "intensity": 100.0,
                     "name": "GeForce GTX 1070"
                 }
             ]
@@ -209,7 +208,7 @@ Run cmake with the -DENABLE_NVIDIA=OFF flag: `cmake -DENABLE_NVIDIA=OFF ..`
 
 * It's recommended to use Clang to compile. It gets better CPU hashrate for many people.
 * If you're on ARM however, GCC gets slightly better hashrate.
-* You will need to install CUDA if you want Nvidia support, which is somewhat out of the scope of this document. 
+* You will need to install CUDA if you want Nvidia support, which is somewhat out of the scope of this document.
 * You can find the CUDA binaries for linux here: https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64
 
 #### Ubuntu, using Clang
@@ -292,7 +291,7 @@ cd && rm -Rf violetminer && apt-get update && pkg update -y && pkg install cmake
 
 Using [this](https://android.googlesource.com/platform/ndk/+/ndk-release-r20/build/cmake/android.toolchain.cmake) toolchain
 
-ANDROID_ABI can be 
+ANDROID_ABI can be
 
 * armeabi-v7a
 * arm64-v8a
