@@ -294,7 +294,7 @@ bool PoolCommunication::tryLogin(const Pool &pool)
             loginFailed(pool, i, true);
             continue;
         }
-        
+
         const nlohmann::json loginMsg = {
             {"method", "login"},
             {"params", {
@@ -336,7 +336,7 @@ bool PoolCommunication::tryLogin(const Pool &pool)
             try
             {
                 std::cout << InformationMsg(formatPool(pool)) << SuccessMsg("Logged in.") << std::endl;
-                
+
                 if (m_socket)
                 {
                     m_socket->stop();
@@ -352,7 +352,7 @@ bool PoolCommunication::tryLogin(const Pool &pool)
                 {
                     m_currentPool.niceHash = true;
                 }
-                
+
                 registerHandlers();
 
                 if (m_onPoolSwapped)
@@ -377,7 +377,7 @@ bool PoolCommunication::tryLogin(const Pool &pool)
 
     std::cout << InformationMsg(formatPool(pool)) << WarningMsg("All login/connect attempts failed.") << std::endl;
 
-     return false;
+    return false;
 }
 
 void PoolCommunication::managePools()

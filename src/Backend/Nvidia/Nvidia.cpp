@@ -112,6 +112,10 @@ std::shared_ptr<NvidiaHash> getNvidiaMiningAlgorithm(const std::string &algorith
         {
             return std::make_shared<NvidiaHash>(512, 3);
         }
+        case ArgonVariant::ChukwaV2:
+        {
+            return std::make_shared<NvidiaHash>(1024, 4);
+        }
         case ArgonVariant::ChukwaWrkz:
         {
             return std::make_shared<NvidiaHash>(256, 4);
@@ -169,7 +173,7 @@ void Nvidia::hash(NvidiaDevice &gpu, const uint32_t threadNumber)
 
             std::cout << WhiteMsg("[GPU " + std::to_string(gpu.id) + "] ")
                       << InformationMsg("Allocating ")
-                      << SuccessMsg(static_cast<double>(state.launchParams.memSize) / (1024 * 1024 * 1024)) 
+                      << SuccessMsg(static_cast<double>(state.launchParams.memSize) / (1024 * 1024 * 1024))
                       << SuccessMsg("GB") << InformationMsg(" of GPU memory.") << "\n"
                       << WhiteMsg("[GPU " + std::to_string(gpu.id) + "] ")
                       << InformationMsg("Performing ")
