@@ -8,29 +8,22 @@ if (ENABLE_NVIDIA)
     endif()
 endif()
 
-# Add the ArgonVariants directory to add that library
 add_subdirectory(ArgonVariants)
 
-# Add the Argon2 directory to add that library
 add_subdirectory(Argon2)
 
-# Add the Backend directory to add that library
 add_subdirectory(Backend)
 
-# Add the Config directory to add that library
 add_subdirectory(Config)
 
-# Add the Miner directory to add the actual executable
+add_subdirectory(Logger)
+
 add_subdirectory(Miner)
 
-# Add the MinerManager directory to add that library
 add_subdirectory(MinerManager)
 
-# Add the PoolCommunication directory to add that library
 add_subdirectory(PoolCommunication)
 
-# Add the Types directory to add that library
 add_subdirectory(Types)
 
-# Add the Utilities directory to add that library
 add_subdirectory(Utilities)
