@@ -41,7 +41,7 @@ class PoolCommunication
     /* Register a function to call when a share is accepted */
     void onHashAccepted(const std::function<void(const std::string &shareID)>);
 
-    /* Register a function to call when the current pool is disconnected and 
+    /* Register a function to call when the current pool is disconnected and
        a new pool is connected */
     void onPoolSwapped(const std::function<void(const Pool &pool)>);
 
@@ -50,9 +50,6 @@ class PoolCommunication
 
     /* Prints the currently connected pool for formatting purposes */
     void printPool() const;
-
-    /* Gets the algorithm to use for the current pool */
-    std::string getMiningAlgorithm() const;
 
     /* Gets the name of the current algorithm */
     std::string getAlgorithmName() const;

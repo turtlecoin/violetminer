@@ -53,6 +53,10 @@ struct Pool
     /* Does this pool require SSL for connecting */
     bool ssl = false;
 
+    /* Disable automatically selecting the correct algorithm from the pool job data.
+     * This may be desired if the pool is returning the incorrect value. */
+    bool disableAutoAlgoSelect = false;
+
     std::string getAgent() const
     {
         return agent == "" ? "violetminer/" + Constants::VERSION_NUMBER : agent;
@@ -89,7 +93,8 @@ inline void to_json(nlohmann::json &j, const Pool &pool)
         {"agent", pool.agent},
         {"niceHash", pool.niceHash},
         {"priority", pool.priority},
-        {"ssl", pool.ssl}
+        {"ssl", pool.ssl},
+        {"disableAutoAlgoSelect", pool.disableAutoAlgoSelect},
     };
 }
 
@@ -146,5 +151,10 @@ inline void from_json(const nlohmann::json &j, Pool &pool)
                       << WarningMsg("If this pool is indeed SSL only, connecting will fail. Try another port or compile with SSL support.") << std::endl;
         }
         #endif
+    }
+
+    if (j.find("disableAutoAlgoSelect") != j.end())
+    {
+        pool.disableAutoAlgoSelect = j.at("disableAutoAlgoSelect").get<bool>();
     }
 }

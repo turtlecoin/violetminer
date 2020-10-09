@@ -50,6 +50,23 @@ namespace ArgonVariant
         { "chukwa/wrkz",    ChukwaWrkz, false },
     };
 
+    inline bool isSupportedAlgorithm(const std::string &algorithmNameDirty)
+    {
+        std::string algorithmName = algorithmNameDirty;
+
+        std::transform(algorithmName.begin(), algorithmName.end(), algorithmName.begin(), ::tolower);
+
+        Utilities::trim(algorithmName);
+
+        const auto it = std::find_if(algorithmNameMapping.begin(), algorithmNameMapping.end(),
+        [&algorithmName](const auto algo)
+        {
+            return std::get<0>(algo) == algorithmName;
+        });
+
+        return it != algorithmNameMapping.end();
+    }
+
     inline Algorithm algorithmNameToCanonical(const std::string &algorithmNameDirty)
     {
         std::string algorithmName = algorithmNameDirty;

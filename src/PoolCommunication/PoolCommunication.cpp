@@ -459,12 +459,11 @@ void PoolCommunication::keepAlive()
 void PoolCommunication::updateJobInfoFromPool(Job &job) const
 {
     job.isNiceHash = isNiceHash();
-    job.algorithm = getMiningAlgorithm();
-}
 
-std::string PoolCommunication::getMiningAlgorithm() const
-{
-    return m_currentPool.algorithm;
+    if (job.algorithm.empty() || m_currentPool.disableAutoAlgoSelect)
+    {
+        job.algorithm = m_currentPool.algorithm;
+    }
 }
 
 bool PoolCommunication::isNiceHash() const

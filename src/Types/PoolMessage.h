@@ -8,6 +8,7 @@
 #include <string>
 #include <variant>
 
+#include "ArgonVariants/Variants.h"
 #include "ExternalLibs/json.hpp"
 #include "Utilities/String.h"
 
@@ -187,6 +188,16 @@ inline void from_json(const nlohmann::json &j, Job &job)
     if (j.find("rootMinorVersion") != j.end())
     {
         job.rootMinorVersion = j.at("rootMinorVersion").get<uint8_t>();
+    }
+
+    if (j.find("algo") != j.end())
+    {
+        const auto poolAlgorithm = j.at("algo").get<std::string>();
+
+        if (ArgonVariant::isSupportedAlgorithm(poolAlgorithm))
+        {
+            job.algorithm = poolAlgorithm;
+        }
     }
 }
 
