@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+void throw_on_cuda_error(int code, const char *file, int line);
+
 int getDeviceCount();
 
 std::string getDeviceName(uint16_t deviceId);

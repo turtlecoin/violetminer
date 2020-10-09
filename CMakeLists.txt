@@ -130,7 +130,7 @@ if (ENABLE_NVIDIA)
     list(APPEND NVIDIA_TARGETS violetminer NvidiaBackend Nvidia)
 
     foreach(target ${NVIDIA_TARGETS})
-        target_compile_features(${target} PUBLIC cxx_std_11)
+        target_compile_features(${target} PUBLIC cxx_std_14)
     endforeach()
 
     set_target_properties(${NVIDIA_TARGETS}
