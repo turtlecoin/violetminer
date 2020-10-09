@@ -571,9 +571,9 @@ std::vector<Pool> getPools()
     return pools;
 }
 
-void writeConfigToDisk(MinerConfig config)
+void writeConfigToDisk(MinerConfig config, const std::string &configLocation)
 {
-    std::ofstream configFile(Constants::CONFIG_FILE_NAME);
+    std::ofstream configFile(configLocation);
 
     nlohmann::json j = config;
 
@@ -598,9 +598,8 @@ MinerConfig getConfigInteractively()
     config.hardwareConfiguration->amd.devices = getAmdDevices();
     config.hardwareConfiguration->cpu.enabled = true;
     config.hardwareConfiguration->cpu.optimizationMethod = Constants::AUTO;
-    config.interactive = true;
 
-    writeConfigToDisk(config);
+    writeConfigToDisk(config, Constants::CONFIG_FILE_NAME);
 
     return config;
 }
@@ -633,7 +632,7 @@ MinerConfig getConfigFromJSON(const std::string &configLocation)
             Console::exitOrWaitForInput(1);
         }
 
-        writeConfigToDisk(jsonConfig);
+        writeConfigToDisk(jsonConfig, configLocation);
 
         return jsonConfig;
     }

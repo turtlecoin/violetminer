@@ -52,7 +52,14 @@ std::vector<std::tuple<std::string, bool, int>> getNvidiaDevicesActual()
 
     for (int i = 0; i < numberDevices; i++)
     {
-        devices.push_back(std::make_tuple(getDeviceName(i), true, i));
+        const auto device = getDeviceName(i);
+
+        if (device == "")
+        {
+            continue;
+        }
+
+        devices.push_back(std::make_tuple(device, true, i));
     }
 
     return devices;

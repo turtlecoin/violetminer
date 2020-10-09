@@ -181,8 +181,6 @@ struct MinerConfig
 
     std::string configLocation;
 
-    bool interactive = false;
-
     std::shared_ptr<HardwareConfig> hardwareConfiguration = std::make_shared<HardwareConfig>();
 };
 
@@ -197,6 +195,8 @@ Constants::OptimizationMethod getAutoChosenOptimization();
 Pool getPool();
 
 std::vector<Pool> getPools();
+
+void writeConfigToDisk(MinerConfig config, const std::string &configLocation);
 
 MinerConfig getConfigInteractively();
 

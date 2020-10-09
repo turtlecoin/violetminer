@@ -6,6 +6,7 @@
 
 #include <atomic>
 #include <memory>
+#include <mutex>
 
 #include "Backend/IBackend.h"
 #include "Types/JobSubmit.h"
@@ -31,6 +32,8 @@ class Nvidia : virtual public IBackend
   private:
 
     void hash(NvidiaDevice &gpu, const uint32_t threadNumber);
+
+    uint32_t getGpuLagMicroseconds(const NvidiaDevice &gpu);
 
     /* Current job to be working on */
     Job m_currentJob;
@@ -59,4 +62,7 @@ class Nvidia : virtual public IBackend
         const std::string &deviceName)> m_incrementHashesPerformed;
 
     size_t m_numAvailableGPUs;
+
+    /* Mutex to ensure output is not interleaved */
+    std::mutex m_outputMutex;
 };
