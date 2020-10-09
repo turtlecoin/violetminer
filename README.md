@@ -8,10 +8,6 @@ A CPU and NVIDIA miner for TurtleCoin / Chukwa / Argon2id / WrkzCoin.
 
 [![Build Status](https://travis-ci.org/turtlecoin/violetminer.svg?branch=master)](https://travis-ci.org/turtlecoin/violetminer)
 
-#### Development Build Status
-
-[![Build Status](https://travis-ci.org/turtlecoin/violetminer.svg?branch=development)](https://travis-ci.org/turtlecoin/violetminer)
-
 ## Download
 
 [Go here to download the latest release.](https://github.com/turtlecoin/violetminer/releases)
