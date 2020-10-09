@@ -142,7 +142,7 @@ if (ENABLE_NVIDIA)
                           PROPERTIES
                           CUDA_ARCHITECTURES "${NVIDIA_ARCH}"
                           CUDA_SEPARABLE_COMPILATION ON
-                          CUDA_STANDARD 11)
+                          CUDA_STANDARD 14)
 
     if (MSVC)
         set_target_properties(${NVIDIA_TARGETS}
