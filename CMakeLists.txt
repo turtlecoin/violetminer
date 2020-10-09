@@ -5,6 +5,7 @@ project(violetminer LANGUAGES CXX)
 
 option(ENABLE_NVIDIA "Enable Nvidia support" ON)
 option(ENABLE_SSL "Enable SSL support if available" ON)
+option(NVIDIA_ARCH "Nvidia architectures to compile for" "10 13 20 30 35 37 50 52 60 61 70 72 75")
 
 if (ENABLE_NVIDIA)
     enable_language(CUDA)
@@ -124,3 +125,30 @@ else()
 endif ()
 
 add_subdirectory(src)
+
+if (ENABLE_NVIDIA)
+    list(APPEND NVIDIA_TARGETS violetminer NvidiaBackend Nvidia)
+
+    foreach(target ${NVIDIA_TARGETS})
+        target_compile_features(${target} PUBLIC cxx_std_11)
+    endforeach()
+
+    set_target_properties(${NVIDIA_TARGETS}
+                          PROPERTIES
+                          CUDA_ARCHITECTURES "${NVIDIA_ARCH}"
+                          CUDA_SEPARABLE_COMPILATION ON
+                          CUDA_STANDARD 11)
+
+    if (MSVC)
+        set_target_properties(${NVIDIA_TARGETS}
+                              PROPERTIES
+                              CUDA_RESOLVE_DEVICE_SYMBOLS ON)
+    endif()
+
+    # Makes cuda-memcheck, cuda-gdb, etc, much more helpful
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -g -G")
+    else()
+        set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3")
+    endif()
+endif()
