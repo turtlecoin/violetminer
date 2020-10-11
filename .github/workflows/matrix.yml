@@ -1,0 +1,285 @@
+name: Build
+on:
+    push:
+    pull_request:
+    release:
+        types: [published]
+
+env:
+  TAG: ${{ github.ref }}
+
+jobs:
+  # Common Build matrix for builds on Ubuntu VM
+  ubuntu_build:
+    name: ${{ matrix.build_name }}
+    runs-on: ubuntu-18.04
+    strategy:
+      fail-fast: false
+      matrix:
+        # Add more compilers here if you need them
+        build_name: ['Ubuntu GCC 7', 'Ubuntu GCC 8', 'Ubuntu Clang 8', 'aarch64']
+        include:
+          - build_name: 'Ubuntu GCC 7'
+            package_name: 'gcc-7 g++-7'
+            cc: gcc-7
+            cxx: g++-7
+            label: linux-gcc-7
+            deployable: false
+          - build_name: 'Ubuntu GCC 8'
+            package_name: 'gcc-8 g++-8'
+            cc: gcc-8
+            cxx: g++-8
+            label: linux
+            deployable: true
+          - build_name: 'Ubuntu Clang 8'
+            cc: clang-8
+            cxx: clang++-8
+            label: linux-clang-8
+            deployable: false
+          - build_name: 'aarch64'
+            label: aarch64
+            deployable: true
+    env:
+      LABEL: ${{ matrix.label }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Fetch submodules
+        run: git submodule update --init --recursive
+
+      - name: Clang 8
+        if: matrix.build_name == 'Ubuntu Clang 8'
+        run: |
+           sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+           clang --version
+
+      - name: Install CUDA
+        if: matrix.build_name != 'aarch64'
+        run: |
+          CUDA_PATH="/usr/local/cuda"
+          CUDA_BIN_PATH="/usr/local/cuda/bin"
+          CUDA=10.1.243-1
+          CUDA_SHORT=10.1.243-1
+          UBUNTU_VERSION=ubuntu1804
+          INSTALLER=cuda-repo-${UBUNTU_VERSION}_${CUDA}_amd64.deb
+          wget http://developer.download.nvidia.com/compute/cuda/repos/${UBUNTU_VERSION}/x86_64/${INSTALLER}
+          sudo dpkg -i ${INSTALLER}
+          wget https://developer.download.nvidia.com/compute/cuda/repos/${UBUNTU_VERSION}/x86_64/7fa2af80.pub
+          sudo apt-key add 7fa2af80.pub
+          sudo apt update -qq
+          sudo apt install -y cuda
+          sudo apt clean
+          CUDACXX=/usr/local/cuda/bin/nvcc
+          /usr/local/cuda/bin/nvcc --version
+
+      - name: Install Dependencies
+        if: matrix.build_name != 'aarch64'
+        run: |
+          sudo apt update
+          sudo apt install -y libboost-all-dev libssl-dev ${{ matrix.package_name }}
+
+      - name: Configure
+        if: matrix.build_name != 'aarch64'
+        env:
+          CC: ${{ matrix.cc }}
+          CXX: ${{ matrix.cxx }}
+          CUDA_HOME: '/usr/local/cuda/'
+          CUDACXX: '/usr/local/cuda/bin/nvcc'
+        run: |
+          mkdir build && cd build
+          cmake -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc ..
+
+      - name: Build
+        if: matrix.build_name != 'aarch64'
+        run: |
+          cd build
+          make -j2
+
+      - name: Prepare and Build (aarch64)
+        if: matrix.build_name == 'aarch64'
+        run: |
+          source scripts/prep-aarch64.sh
+          mkdir build && cd build
+          cmake -DENABLE_NVIDIA=OFF ..
+          make -j2
+
+      - name: Test Crypto
+        if: matrix.build_name != 'aarch64'
+        run: |
+          cd build/
+          ./argon2-cpp-test
+
+      - name: Prepare for Deploy
+        id: before_deploy
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          if [[ "${TAG:5:4}" == "tags" ]]; then export TAG=${TAG:10}; else export TAG=${COMMIT_SHA}; fi
+          cd build
+          if [[ "${LABEL}" != "aarch64" ]]; then strip violetminer; fi
+          rm -rf violetminer-${LABEL}-${TAG}
+          mkdir violetminer-${LABEL}-${TAG}
+          cp -r violetminer ../README.md violetminer-${LABEL}-${TAG}/
+          tar cvfz violetminer-${LABEL}-${TAG}.tar.gz violetminer-${LABEL}-${TAG}
+          ls
+          pwd
+          echo ::set-output name=file_name::violetminer-${LABEL}-${TAG}.tar.gz
+          echo ::set-output name=binary_name::violetminer-${LABEL}-${TAG}
+
+      - name: Upload to GH Release
+        if: github.event_name == 'release' && github.repository == 'turtlecoin/violetminer' && matrix.deployable
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./build/${{ steps.before_deploy.outputs.file_name }}
+          asset_name: ${{ steps.before_deploy.outputs.file_name }}
+          asset_content_type: application/gzip
+
+      # Upload to GH Actions Artifacts
+      - name: Upload To GH Artifacts
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: ${{ steps.before_deploy.outputs.binary_name }}
+          path: ./build/${{ steps.before_deploy.outputs.binary_name }}
+
+  # Mac builds on Catalina VM
+  macos_build:
+    name: macOS
+    runs-on: macOS-latest
+    env:
+      CC: /usr/local/opt/llvm@8/bin/clang
+      CXX: /usr/local/opt/llvm@8/bin/clang++
+      LABEL: osx
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Fetch submodules
+        run: git submodule update --init --recursive
+
+      - name: Dependencies
+        run: |
+          brew install openssl || brew upgrade openssl
+          brew install --force boost llvm@8
+          brew link --force openssl
+          ln -s /usr/local/opt/openssl/include/openssl /usr/local/include
+
+      - name: Configure
+        run: |
+          mkdir build && cd build
+          cmake -DENABLE_NVIDIA=OFF ..
+
+      - name: Build
+        run: |
+          cd build
+          make -j2
+
+      - name: Test Crypto
+        if: matrix.build_name != 'aarch64'
+        run: |
+          cd build
+          ./argon2-cpp-test
+
+      - name: Prepare for Deploy
+        id: before_deploy
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          if [[ "${TAG:5:4}" == "tags" ]]; then export TAG=${TAG:10}; else export TAG=${COMMIT_SHA}; fi
+          cd build
+          if [[ "${LABEL}" != "aarch64" ]]; then strip violetminer; fi
+          rm -rf violetminer-${LABEL}-${TAG}
+          mkdir violetminer-${LABEL}-${TAG}
+          cp -r violetminer ../README.md violetminer-${LABEL}-${TAG}/
+          tar cvfz violetminer-${LABEL}-${TAG}.tar.gz violetminer-${LABEL}-${TAG}
+          pwd
+          ls
+          echo ::set-output name=file_name::violetminer-${LABEL}-${TAG}.tar.gz
+          echo ::set-output name=binary_name::violetminer-${LABEL}-${TAG}
+
+      - name: Upload to GH Release
+        if: github.event_name == 'release' && github.repository == 'turtlecoin/violetminer'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./build/${{ steps.before_deploy.outputs.file_name }}
+          asset_name: ${{ steps.before_deploy.outputs.file_name }}
+          asset_content_type: application/gzip
+
+      - name: Upload To GH Artifacts
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: ${{ steps.before_deploy.outputs.binary_name }}
+          path: ./build/${{ steps.before_deploy.outputs.binary_name }}
+
+  windows_build:
+    name: Windows
+    runs-on: windows-latest
+    env:
+      LABEL: windows
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/cache@v2
+        id: cache
+        with:
+          path: |
+            C:\Program Files\NVIDIA GPU Computing Toolkit\
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+
+      - name: Fetch submodules
+        run: git submodule update --init --recursive
+
+      - name: Install CUDA
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          choco install cuda
+          refreshenv
+
+      - name: Install OpenSSL
+        run: choco install openssl
+
+      - name: Install CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Compile
+        run: |
+          copy 'C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.1\extras\visual_studio_integration\MSBuildExtensions\*' 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\BuildCustomizations'
+
+          ./scripts/win-install.bat
+
+      - name: Prepare for Deploy
+        shell: bash
+        id: before_deploy
+        env:
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          if [[ "${TAG:5:4}" == "tags" ]]; then export TAG=${TAG:10}; else export TAG=${COMMIT_SHA}; fi
+          cd build
+          cd Release
+          rm -rf violetminer-${LABEL}-${TAG}
+          mkdir violetminer-${LABEL}-${TAG}
+          cp -r violetminer.exe ../../README.md violetminer-${LABEL}-${TAG}
+          7z a violetminer-${LABEL}-${TAG}.zip violetminer-${LABEL}-${TAG}
+          echo ::set-output name=file_name::violetminer-${LABEL}-${TAG}.zip
+          echo ::set-output name=binary_name::violetminer-${LABEL}-${TAG}
+
+      - name: Upload to GH Release
+        if: github.event_name == 'release' && github.repository == 'turtlecoin/violetminer'
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./build/Release/${{ steps.before_deploy.outputs.file_name }}
+          asset_name: ${{ steps.before_deploy.outputs.file_name }}
+          asset_content_type: application/zip
+
+      - name: Upload To GH Artifacts
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: ${{ steps.before_deploy.outputs.binary_name }}
+          path: ./build/Release/${{ steps.before_deploy.outputs.binary_name }}

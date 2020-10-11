@@ -42,14 +42,14 @@ export CUSTOM_TOOLCHAIN_FILE=../scripts/cross-aarch64.cmake
 
 # Check to see if we have OpenSSL ready in our toolchain, if
 # not we'll download and build it
-echo -n "Checking for OpenSSL 1.0.2r..."
+echo -n "Checking for OpenSSL..."
 if [ ! -f $TOOLCHAIN_DIR/openssl/lib/libcrypto.a ]; then
   echo "Not found... Installing..."
-  wget -nv https://www.openssl.org/source/openssl-1.0.2r.tar.gz
-  tar zxvf openssl-1.0.2r.tar.gz >/dev/null
-  cd openssl-1.0.2r
+  wget -nv https://www.openssl.org/source/openssl-1.1.1h.tar.gz
+  tar zxvf openssl-1.1.1h.tar.gz >/dev/null
+  cd openssl-1.1.1h
   ./Configure linux-aarch64 --prefix=$TOOLCHAIN_DIR/openssl --openssldir=$TOOLCHAIN_DIR/openssl >/dev/null
-  echo -n "Building OpenSSL 1.0.2r... "
+  echo -n "Building OpenSSL... "
   make PROCESSOR=ARM install >/dev/null
   echo "Complete"
 else

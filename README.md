@@ -4,17 +4,11 @@
 
 A CPU and NVIDIA miner for TurtleCoin / Chukwa / Argon2id / WrkzCoin.
 
-#### Master Build Status
-
-[![Build Status](https://travis-ci.org/turtlecoin/violetminer.svg?branch=master)](https://travis-ci.org/turtlecoin/violetminer)
-
 ## Download
 
 [Go here to download the latest release.](https://github.com/turtlecoin/violetminer/releases)
 
 If you prefer to compile yourself, read on. This can result in increased hashrates in some cases.
-
-If you're an arch user, you can install the [violetminer-bin](https://aur.archlinux.org/packages/violetminer-bin/) package to get a binary, or install the [violetminer-git](https://aur.archlinux.org/packages/violetminer-git/) package to get the latest code from the dev branch. Both are available in the AUR.
 
 ## Setup / Usage
 
@@ -23,7 +17,7 @@ We suggest you follow the [guide here](https://docs.turtlecoin.lol/guides/mining
 ## Algorithms Supported
 * TurtleCoin (ChukwaV2) - choose `turtlecoin` or `chukwa_v2`
 * WrkzCoin - choose `wrkzcoin` or `chukwa_wrkz`
-* Chukwa - choose `chukwa`
+* Chukwa (TurtleCoin pre-fork) - choose `chukwa`
 
 ## Notes
 
