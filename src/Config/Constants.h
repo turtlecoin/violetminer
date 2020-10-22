@@ -17,7 +17,7 @@ namespace Constants
     const float DEV_FEE_PERCENT = 1.0;
 
     /* Program version */
-    const std::string VERSION_NUMBER = "0.2.0";
+    const std::string VERSION_NUMBER = "0.2.1";
 
     const std::string VERSION = "v" + VERSION_NUMBER;
 
