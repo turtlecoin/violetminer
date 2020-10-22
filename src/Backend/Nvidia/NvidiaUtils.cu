@@ -13,27 +13,17 @@
 #include <thrust/system/cuda/error.h>
 #include <sstream>
 
-void throw_on_cuda_error(cudaError_t code, const char *file, int line)
-{
-    if (code == cudaErrorUnknown)
-    {
-        std::cout << WarningMsg<std::string>("Recieved cudaErrorUnknown (999) from Nvidia device. Your PC may need restarting.") << std::endl;
-    }
-
-    if (code != cudaSuccess)
-    {
-        std::stringstream ss;
-        ss << file << "(" << line << ")";
-        std::string file_and_line;
-        ss >> file_and_line;
-        throw thrust::system_error(code, thrust::cuda_category(), file_and_line);
-    }
-}
-
 int getDeviceCount()
 {
     int numberDevices;
-    throw_on_cuda_error(cudaGetDeviceCount(&numberDevices), __FILE__, __LINE__);
+
+    bool haveDevice = throw_on_cuda_error(cudaGetDeviceCount(&numberDevices), __FILE__, __LINE__);
+
+    if (!haveDevice)
+    {
+        return 0;
+    }
+
     return numberDevices;
 }
 
