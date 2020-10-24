@@ -5,7 +5,7 @@ project(violetminer LANGUAGES CXX)
 
 option(ENABLE_NVIDIA "Enable Nvidia support" ON)
 option(ENABLE_SSL "Enable SSL support if available" ON)
-option(NVIDIA_ARCH "Nvidia architectures to compile for" "10 13 20 30 35 37 50 52 60 61 70 72 75")
+option(NVIDIA_ARCH "Nvidia architectures to compile for" "20 21 30 32 35 37 50 52 53 60 62 70 72 75 80 86")
 
 if (ENABLE_NVIDIA)
     enable_language(CUDA)
