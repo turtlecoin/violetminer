@@ -2,7 +2,7 @@
 
 ![image](https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Argon_discharge_tube.jpg/500px-Argon_discharge_tube.jpg)
 
-A CPU and NVIDIA miner for TurtleCoin / Chukwa / Argon2id / WrkzCoin.
+A CPU and NVIDIA miner for TurtleCoin / Chukwa / ChukwaV2 / WrkzCoin.
 
 ## Download
 
@@ -17,7 +17,7 @@ We suggest you follow the [guide here](https://docs.turtlecoin.lol/guides/mining
 ## Algorithms Supported
 * TurtleCoin (ChukwaV2) - choose `turtlecoin` or `chukwa_v2`
 * WrkzCoin - choose `wrkzcoin` or `chukwa_wrkz`
-* Chukwa (TurtleCoin pre-fork) - choose `chukwa`
+* Chukwa - choose `chukwa`
 
 ## Notes
 
@@ -27,7 +27,7 @@ We suggest you follow the [guide here](https://docs.turtlecoin.lol/guides/mining
 
 * Dev fee is 1%.
 * Supports [xmrig-proxy](https://github.com/xmrig/xmrig-proxy) - Make sure to enable `"niceHash": true` in your pool config.
-* Getting an error about a missing MSVCP140.dll or vcrruntime140.dll? Try installing this: https://www.microsoft.com/en-us/download/details.aspx?id=48145
+* Getting an error about a missing MSVCP140_1.dll or vcrruntime140_1.dll? You are missing the Visual C++ 2019 Redistributable. You can find that [here](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads) or [Direct download link (x64)](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 
 ## Configuring
 
