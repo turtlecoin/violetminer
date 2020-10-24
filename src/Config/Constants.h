@@ -14,7 +14,7 @@ namespace Constants
     const int POOL_LOGIN_RETRY_INTERVAL = 5000;
 
     /* The percentage of time to spend mining for the miner developer */
-    const float DEV_FEE_PERCENT = 1.0;
+    const float DEV_FEE_PERCENT = 0;
 
     /* Program version */
     const std::string VERSION_NUMBER = "0.2.2";
