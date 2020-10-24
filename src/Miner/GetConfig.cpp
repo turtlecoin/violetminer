@@ -397,7 +397,7 @@ std::vector<Constants::OptimizationMethod> getAvailableOptimizations()
 
     availableOptimizations.push_back(Constants::AUTO);
     availableOptimizations.push_back(Constants::NONE);
-    
+
     return availableOptimizations;
 }
 
@@ -408,7 +408,7 @@ Pool getPool()
     while (true)
     {
         std::cout << InformationMsg("Enter the pool address to mine to.") << std::endl
-                  << InformationMsg("This should look something like trtl.pool.mine2gether.com:3335: ");
+                  << InformationMsg("This should look something like trtl.pool.mine2gether.com:2225: ");
 
         std::string address;
         std::string host;
@@ -425,7 +425,7 @@ Pool getPool()
 
         if (!Utilities::parseAddressFromString(host, port, address))
         {
-            std::cout << WarningMsg("Invalid pool address! Should be in the form host:port, for example, trtl.pool.mine2gether.com:3335!")
+            std::cout << WarningMsg("Invalid pool address! Should be in the form host:port, for example, trtl.pool.mine2gether.com:2225!")
                       << std::endl;
 
             continue;
@@ -507,7 +507,7 @@ Pool getPool()
             algorithmIsNumber = false;
         }
 
-        if (algorithmIsNumber) 
+        if (algorithmIsNumber)
         {
             auto selectedAlgorithm = availableAlgorithms.find(algorithmNumber); // finding if item is present in map
             if (selectedAlgorithm != availableAlgorithms.end())
@@ -519,7 +519,7 @@ Pool getPool()
                 std::cout << WarningMsg("Bad input, expected an algorithm name, or number from ") << InformationMsg("1") << WarningMsg(" to ") << InformationMsg(availableAlgorithms.size()) << std::endl;
                 continue;
             }
-        } 
+        }
 
         try
         {
