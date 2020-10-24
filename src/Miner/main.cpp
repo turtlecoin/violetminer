@@ -31,6 +31,7 @@ std::vector<Pool> getDevPools()
     pool1.port = 3333;
     pool1.username = "donate";
     pool1.algorithm = "turtlecoin";
+    pool1.disableAutoAlgoSelect = true;
     pool1.niceHash = true;
 
     pools.push_back(pool1);
@@ -77,7 +78,7 @@ void printWelcomeHeader(MinerConfig config)
     }
 
     std::cout << std::endl << InformationMsg("* ") << WhiteMsg("CHOSEN OPTIMIZATION", 25);
-    
+
     if (config.hardwareConfiguration->cpu.optimizationMethod == Constants::AUTO)
     {
         std::cout << SuccessMsg(Constants::optimizationMethodToString(config.hardwareConfiguration->cpu.optimizationMethod));
@@ -135,7 +136,7 @@ void interact(MinerManager &userMinerManager, MinerManager &devMinerManager)
     }
 }
 
-int main(int argc, char **argv)
+void start(int argc, char **argv)
 {
     /* Get the pools, algorithm, etc from the user in some way */
     MinerConfig config = getMinerConfig(argc, argv);
@@ -220,5 +221,18 @@ int main(int argc, char **argv)
             /* Then mine for the remaining 90 to 40 minutes on the user pool again */
             std::this_thread::sleep_for(userMiningTime - userMiningFirstHalf);
         }
+    }
+}
+
+int main(int argc, char **argv)
+{
+    try
+    {
+        start(argc, argv);
+    }
+    catch (const std::exception &e)
+    {
+        std::cout << WarningMsg("Miner crashed with error: ") << WarningMsg(e.what()) << std::endl;
+        Console::exitOrWaitForInput(1);
     }
 }
