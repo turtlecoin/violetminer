@@ -24,8 +24,7 @@ We suggest you follow the [guide here](https://docs.turtlecoin.lol/guides/mining
 * Supports AVX-512, AVX-2, SSE4.1, SSSE3, SSE2 and NEON optimizations.
 * Supports NVIDIA GPUs.
 * You can set a priority to a pool to determine which ones are tried first. A smaller priority number means we will connect to it first. 0 = highest priority. If we are not connected to the highest priority pool, we will continuously retry connecting to higher priority pools.
-
-* Dev fee is 1%.
+* There is no dev fee. 
 * Supports [xmrig-proxy](https://github.com/xmrig/xmrig-proxy) - Make sure to enable `"niceHash": true` in your pool config.
 * Getting an error about a missing MSVCP140_1.dll or vcrruntime140_1.dll? You are missing the Visual C++ 2019 Redistributable. You can find that [here](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads) or [Direct download link (x64)](https://aka.ms/vs/16/release/vc_redist.x64.exe)
 
