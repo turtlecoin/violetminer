@@ -4,6 +4,9 @@
 
 A CPU and NVIDIA miner for TurtleCoin / Chukwa / ChukwaV2 / WrkzCoin.
 
+GPUs older than 800 series (8xx) are unfortunately not supported, as Cuda 11.1 does not support these (
+https://en.wikipedia.org/wiki/GeForce_700_series#Discontinued_support)
+
 ## Download
 
 [Go here to download the latest release.](https://github.com/turtlecoin/violetminer/releases)
