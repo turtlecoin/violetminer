@@ -1,6 +1,6 @@
 [submodule "src/Argon2"]
 	path = src/Argon2
-	url = https://github.com/zpalmtree/argon2-cpp.git
+	url = https://github.com/notasailor/argon2-cpp.git
 [submodule "src/SocketWrapper"]
 	path = src/SocketWrapper
 	url = https://github.com/zpalmtree/cpp-socketwrapper.git
