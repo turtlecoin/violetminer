@@ -391,6 +391,7 @@ std::vector<Constants::OptimizationMethod> getAvailableOptimizations()
 
     #elif defined(ARMV8_OPTIMIZATIONS)
 
+    availableOptimizations.push_back(Constants::ARMV8);
     availableOptimizations.push_back(Constants::NEON);
 
     #endif

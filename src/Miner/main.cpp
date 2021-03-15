@@ -60,7 +60,7 @@ void printWelcomeHeader(MinerConfig config)
     };
 
 #elif defined(ARMV8_OPTIMIZATIONS)
-    availableOptimizations = { { Constants::NEON, true} }; /* All ARMv8 cpus have NEON optimizations */
+    availableOptimizations = { { Constants::ARMV8, true }, { Constants::NEON, false } }; /* All ARMv8 cpus have NEON optimizations */
 #else
     availableOptimizations = {{ Constants::NONE, false } };
 #endif
