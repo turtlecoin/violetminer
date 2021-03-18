@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "Argon2/Constants.h"
+
 namespace Constants
 {
     /* How many times to attempt logging into a pool before giving up and trying
@@ -19,7 +21,7 @@ namespace Constants
     /* Program version */
     const std::string VERSION_NUMBER = "0.2.2";
 
-    const std::string VERSION = "v" + VERSION_NUMBER;
+    const std::string VERSION = "v" + VERSION_NUMBER + " with Argon2 version " + std::to_string(CURRENT_ARGON_VERSION);
 
     /* Name of config file to look for */
     const std::string CONFIG_FILE_NAME = "config.json";
